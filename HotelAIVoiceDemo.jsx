@@ -112,44 +112,88 @@ export default function HotelAIVoiceDemo() {
     if (!listening) { try { recog.start(); setListening(true); } catch(e) { console.warn(e); } }
     else { recog.stop(); setListening(false); }
   }
+  //
+  // async function submitUserMessage(text) {
+  //   // 1️⃣ Add user message immediately
+  //   const updatedMessages = [...messages, { role: "user", text }];
+  //   setMessages(updatedMessages);
+  //
+  //   // 2️⃣ Handle human request
+  //   if (/\b(human|person|operator|representative|agent|reps)\b/i.test(text)) {
+  //     simulateStaffNotification(text);
+  //     const reply = "I’ve notified our staff. They will follow up by phone or email shortly.";
+  //     // setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+  //     setMessages([...updatedMessages, { role: "assistant", text: reply }]);
+  //     speak(reply);
+  //     return;
+  //   }
+  //
+  //   // 3️⃣ Let AI handle it
+  //   if (OPENAI_ENABLED) {
+  //     setStatus("Asking AI...");
+  //     try {
+  //       const aiReply = await fetchOpenAIAnswer(updatedMessages); // pass full updated history
+  //       setMessages(prev => [...prev, { role: "assistant", text: aiReply }]); // append only once
+  //       speak(aiReply);
+  //       setStatus("ready");
+  //     } catch (e) {
+  //       console.error(e);
+  //       const err = "Sorry, something went wrong when contacting the AI.";
+  //       setMessages(prev => [...prev, { role: "assistant", text: err }]);
+  //       speak(err);
+  //       setStatus("ready");
+  //     }
+  //     return;
+  //   }
+  //
+  //   // 4️⃣ Fallback if AI is disabled
+  //   const fallback = "I don’t have that info right now. Try asking about rooms, packages, dining, check-in, or say 'talk to a human'.";
+  //   setMessages(prev => [...prev, { role: "assistant", text: fallback }]);
+  //   speak(fallback);
+  // }
 
   async function submitUserMessage(text) {
-    // 1️⃣ Add user message immediately
-    const updatedMessages = [...messages, { role: "user", text }];
-    setMessages(updatedMessages);
+    setMessages(prevMessages => {
+      const updatedMessages = [...prevMessages, { role: "user", text }];
 
-    // 2️⃣ Handle human request
-    if (/\b(human|person|operator|representative|agent|reps)\b/i.test(text)) {
-      simulateStaffNotification(text);
-      const reply = "I’ve notified our staff. They will follow up by phone or email shortly.";
-      // setMessages(prev => [...prev, { role: "assistant", text: reply }]);
-      setMessages([...updatedMessages, { role: "assistant", text: reply }]);
-      speak(reply);
-      return;
-    }
-
-    // 3️⃣ Let AI handle it
-    if (OPENAI_ENABLED) {
-      setStatus("Asking AI...");
-      try {
-        const aiReply = await fetchOpenAIAnswer(updatedMessages); // pass full updated history
-        setMessages(prev => [...prev, { role: "assistant", text: aiReply }]); // append only once
-        speak(aiReply);
-        setStatus("ready");
-      } catch (e) {
-        console.error(e);
-        const err = "Sorry, something went wrong when contacting the AI.";
-        setMessages(prev => [...prev, { role: "assistant", text: err }]);
-        speak(err);
-        setStatus("ready");
+      // Handle human request
+      if (/\b(human|person|operator|representative|agent|reps)\b/i.test(text)) {
+        simulateStaffNotification(text);
+        const reply = "I’ve notified our staff. They will follow up by phone or email shortly.";
+        speak(reply);
+        return [...updatedMessages, { role: "assistant", text: reply }];
       }
-      return;
-    }
 
-    // 4️⃣ Fallback if AI is disabled
-    const fallback = "I don’t have that info right now. Try asking about rooms, packages, dining, check-in, or say 'talk to a human'.";
-    setMessages(prev => [...prev, { role: "assistant", text: fallback }]);
-    speak(fallback);
+      // Let AI handle it
+      if (OPENAI_ENABLED) {
+        (async () => {
+          setStatus("Asking AI...");
+          try {
+            const aiReply = await fetchOpenAIAnswer(updatedMessages);
+            setMessages(prev => [...prev, { role: "assistant", text: aiReply }]);
+            speak(aiReply);
+            setStatus("ready");
+          } catch (e) {
+            console.error(e);
+            const err = "Sorry, something went wrong when contacting the AI.";
+            setMessages(prev => [...prev, { role: "assistant", text: err }]);
+            speak(err);
+            setStatus("ready");
+          }
+        })();
+      }
+
+      // Fallback if AI disabled
+      if (!OPENAI_ENABLED) {
+        const fallback = "I don’t have that info right now. Try asking about rooms, packages, dining, check-in, or say 'talk to a human'.";
+        speak(fallback);
+        return [...updatedMessages, { role: "assistant", text: fallback }];
+      }
+
+      return updatedMessages;
+    });
+
+    setTranscript(""); // clear input
   }
 
   function simulateStaffNotification(userText) {
