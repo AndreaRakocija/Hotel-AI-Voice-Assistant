@@ -1,16 +1,37 @@
-# React + Vite
+# Hotel AI Voice Assistant
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**A modern AI-powered voice and text assistant for hotel guests, built with React and OpenAI. Provides instant, conversational support and seamless human escalation.**
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Project Overview
 
-## React Compiler
+Designed to enhance the guest experience, this AI assistant provides instant, conversational support for hotel-related inquiries. Guests can ask about rooms, packages, dining, or request special surprises, all through voice or text. When needed, it seamlessly escalates requests to human staff, ensuring a personal touch.
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Key Features
 
-## Expanding the ESLint configuration
+- **Voice & Text Interaction:** Speak naturally or type messages; powered by browser SpeechRecognition with a sleek chat interface.  
+- **AI-Powered Answers:** Uses OpenAI (GPT-4o-mini) for accurate, conversational responses.  
+- **Human Escalation:** Detects requests for staff assistance and logs callbacks with timestamps.  
+- **Speech Output:** Replies are read aloud using SpeechSynthesis.  
+- **Modern, Responsive UI:** React + Tailwind CSS, chat bubbles, gradient buttons, interactive callback log.  
+- **Context Awareness:** Maintains the last 10 messages for coherent multi-turn conversations.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+
+- **Frontend:** React, Tailwind CSS, SpeechRecognition, SpeechSynthesis  
+- **AI Backend:** OpenAI API (GPT-4o-mini)  
+- **State Management:** React hooks (`useState`, `useEffect`)
+
+## Why It Stands Out
+
+- Combines AI, voice interaction, and user-friendly UI to simulate a real concierge.  
+- Demonstrates integration of AI APIs into a modern frontend.  
+- Highlights problem-solving, UX design, and full-stack skills.
+
+## Future Enhancements
+
+- Real-time room availability via backend APIs  
+- Multi-language support  
+- Persistent chat history in a database  
+- Analytics dashboard for guest queries
