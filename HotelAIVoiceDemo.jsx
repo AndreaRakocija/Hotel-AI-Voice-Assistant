@@ -37,11 +37,16 @@ const KB = {
 async function fetchOpenAIAnswer(messages) {
   const recentMessages = messages.slice(-10); // keep last 10 for context
   // const res = await fetch("http://localhost:3000/api/chat", {
-  const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat`, {
+  const res = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model: "gpt-4o-mini",
+  // const res = await fetch(`${process.env.REACT_APP_API_URL}/api/chat`, {
+  //   method: "POST",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify({
+  //     model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
